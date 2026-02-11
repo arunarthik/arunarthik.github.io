@@ -147,10 +147,21 @@
   const btn = document.getElementById("aiToggle");
   const modal = document.getElementById("aiModal");
 
+  // Manual toggle on button click
   btn.addEventListener("click", () => {
     modal.style.display =
       modal.style.display === "none" ? "block" : "none";
   });
+
+  // ⭐ Auto-open after 4 seconds (only once per session)
+  const opened = sessionStorage.getItem("ai_auto_opened");
+
+  if (!opened) {
+    setTimeout(() => {
+      modal.style.display = "block";
+      sessionStorage.setItem("ai_auto_opened", "yes");
+    }, 4000);
+  }
 </script>
 
 <style>
