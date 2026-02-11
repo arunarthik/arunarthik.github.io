@@ -73,20 +73,32 @@
     <div id="root"></div>
     <!-- Explicitly link the entry point as a module -->
 <script>
-  const PASSWORD = "arun123"; // change this
+  const PASSWORD = "#Arun@1234"; // change this
 
-  const entered = localStorage.getItem("admin_auth");
+  const adminLink = document.getElementById("adminLink");
 
-  if (entered === PASSWORD) {
-    document.getElementById("adminLink").style.display = "block";
-  } else {
+  adminLink.style.display = "block"; // always show button
+
+  adminLink.addEventListener("click", function (e) {
+    const entered = localStorage.getItem("admin_auth");
+
+    if (entered === PASSWORD) {
+      return; // already authenticated → allow navigation
+    }
+
+    e.preventDefault(); // stop navigation
+
     const ask = prompt("Enter admin password:");
+
     if (ask === PASSWORD) {
       localStorage.setItem("admin_auth", PASSWORD);
-      document.getElementById("adminLink").style.display = "block";
+      window.location.href = "/arun/admin.html";
+    } else {
+      alert("Wrong password");
     }
-  }
+  });
 </script>
+
 
 </body>
 </html>
