@@ -72,5 +72,21 @@
 </a>
     <div id="root"></div>
     <!-- Explicitly link the entry point as a module -->
+<script>
+  const PASSWORD = "arun123"; // change this
+
+  const entered = localStorage.getItem("admin_auth");
+
+  if (entered === PASSWORD) {
+    document.getElementById("adminLink").style.display = "block";
+  } else {
+    const ask = prompt("Enter admin password:");
+    if (ask === PASSWORD) {
+      localStorage.setItem("admin_auth", PASSWORD);
+      document.getElementById("adminLink").style.display = "block";
+    }
+  }
+</script>
+
 </body>
 </html>
