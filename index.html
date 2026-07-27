@@ -1,182 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+     
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terugu Arun | AI Portfolio</title>
+    <title>Terugu Arun | Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        }
-                    },
-                    fontFamily: { sans: ['Inter'], serif: ['Playfair Display'] }
-                }
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            colors: {
+              primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                900: '#1e3a8a',
+              }
             }
+          }
         }
+      }
     </script>
+
+  <link rel="stylesheet" href="/index.css">
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.463.0",
+    "@google/genai": "https://esm.sh/@google/genai@1.3.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+  <script type="module" crossorigin src="./assets/index-Y5NbW7gr.js"></script>
 </head>
-<body class="bg-gray-900 text-white font-sans transition-colors duration-300">
+  <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+         <!-- Admin Button (top-right) -->
+<a
+  href="/arun/admin.html"
+  id="adminLink"
+  style="
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    background: #2563eb;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-decoration: none;
+    display: none;
+    z-index: 9999;
+  "
+>
+  Admin
+</a>
     <div id="root"></div>
+    <!-- Explicitly link the entry point as a module -->
+<script>
+  const PASSWORD = "#Arun@1234"; // change this
 
-    <script type="text/babel">
-        const { useState, useRef, useEffect } = React;
+  const adminLink = document.getElementById("adminLink");
 
-        // Paste your Gemini API Key directly inside these quotes
-        const GEMINI_API_KEY = "AIzaSyD8hDC-4CppaOww6KVbshM9knni6Vn5wvA"; 
+  adminLink.style.display = "block"; // always show button
 
-        // SVG Icons
-        const BotIcon = ({size=16}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>;
-        const UserIcon = ({size=16}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
-        const ChatIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>;
-        const CloseIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
-        const SendIcon = ({size=18}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>;
+  adminLink.addEventListener("click", function (e) {
+    const entered = localStorage.getItem("admin_auth");
 
-        const App = () => {
-            const [isChatOpen, setIsChatOpen] = useState(false);
-            const [messages, setMessages] = useState([
-                { id: "welcome", role: "model", text: "Hi! I'm an AI assistant trained on Arun's resume. Ask me anything about his experience, skills, or projects!" }
-            ]);
-            const [input, setInput] = useState("");
-            const [isTyping, setIsTyping] = useState(false);
-            const messagesEndRef = useRef(null);
+    if (entered === PASSWORD) {
+      return; // already authenticated → allow navigation
+    }
 
-            useEffect(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, [messages, isChatOpen]);
+    e.preventDefault(); // stop navigation
 
-            const handleSend = async () => {
-                if (!input.trim() || isTyping) return;
+    const ask = prompt("Enter admin password:");
 
-                const userMessage = { id: Date.now().toString(), role: "user", text: input };
-                setMessages(prev => [...prev, userMessage]);
-                setInput("");
-                setIsTyping(true);
+    if (ask === PASSWORD) {
+      localStorage.setItem("admin_auth", PASSWORD);
+      window.location.href = "/arun/admin.html";
+    } else {
+      alert("Wrong password");
+    }
+  });
+</script>
 
-                try {
-                    // Direct fetch request to the stable Google Gemini endpoint
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, { 
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ 
-                                parts: [{ 
-                                    text: `You are a professional portfolio AI assistant for Terugu Arun. Arun is a Software Developer specializing in Python, FastAPI, and React. He has experience working at Tata Consultancy Services in clinical trial data systems. Highlight his skills if asked. Keep your answer brief and natural. User asks: ${userMessage.text}` 
-                                }] 
-                            }]
-                        })
-                    });
+<!-- ===== AI FLOATING BUTTON ===== -->
+<button
+  id="aiToggle"
+  style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 14px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 9999;
+    font-weight: 600;
+  "
+>
+  AI
+</button>
 
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        throw new Error(data.error.message);
-                    }
+<!-- ===== AI CHAT MODAL ===== -->
+<div
+  id="aiModal"
+  style="
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 380px;
+    height: 520px;
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 9999;
+  "
+>
+  <iframe
+    src="/arun/"
+    style="width:100%; height:100%; border:none;"
+  ></iframe>
+</div>
 
-                    const botReply = data.candidates[0].content.parts[0].text;
-                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: botReply }]);
-                } catch (error) {
-                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: `API Error: ${error.message}. Double check your API key implementation.` }]);
-                } finally {
-                    setIsTyping(false);
-                }
-            };
+<!-- ===== TOGGLE SCRIPT (MUST BE LAST) ===== -->
+<script>
+  const btn = document.getElementById("aiToggle");
+  const modal = document.getElementById("aiModal");
 
-            return (
-                <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                    <h1 className="text-4xl font-serif font-bold text-center text-primary-500 mb-2">Terugu Arun | AI Portfolio</h1>
-                    <p className="text-gray-400 mb-8">Click the floating chat icon in the bottom right corner to test the direct Gemini integration.</p>
+  // Manual toggle on button click
+  btn.addEventListener("click", () => {
+    modal.style.display =
+      modal.style.display === "none" ? "block" : "none";
+  });
 
-                    {/* Floating Toggle Button */}
-                    <button 
-                        onClick={() => setIsChatOpen(!isChatOpen)}
-                        className="fixed bottom-6 right-6 p-4 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-all z-50 hover:scale-110 active:scale-95"
-                    >
-                        {isChatOpen ? <CloseIcon size={24} /> : <ChatIcon size={24} />}
-                    </button>
+  // ⭐ Auto-open after 4 seconds (only once per session)
+  const opened = sessionStorage.getItem("ai_auto_opened");
 
-                    {/* Chat Window Popup */}
-                    {isChatOpen && (
-                        <div className="fixed bottom-24 right-6 w-80 md:w-96 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden flex flex-col z-50 h-[500px]">
-                            {/* Header */}
-                            <div className="p-4 bg-primary-600 text-white flex items-center justify-between">
-                                <h3 className="font-semibold flex items-center gap-2">
-                                    <BotIcon size={20} />
-                                    <span>AI Assistant</span>
-                                </h3>
-                                <button onClick={() => setIsChatOpen(false)} className="text-white/80 hover:text-white">
-                                    <CloseIcon size={18} />
-                                </button>
-                            </div>
+  if (!opened) {
+    setTimeout(() => {
+      modal.style.display = "block";
+      sessionStorage.setItem("ai_auto_opened", "yes");
+    }, 4000);
+  }
+</script>
 
-                            {/* Chat body */}
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900/50 text-gray-200">
-                                {messages.map(msg => (
-                                    <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "bg-indigo-900 text-indigo-300" : "bg-primary-900 text-primary-300"}`}>
-                                            {msg.role === "user" ? <UserIcon size={16} /> : <BotIcon size={16} />}
-                                        </div>
-                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.role === "user" ? "bg-primary-600 text-white rounded-br-none" : "bg-gray-700 text-gray-100 rounded-bl-none border border-gray-600"}`}>
-                                            {msg.text}
-                                        </div>
-                                    </div>
-                                ))}
-                                {isTyping && (
-                                    <div className="flex gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-primary-900 text-primary-300 flex items-center justify-center flex-shrink-0">
-                                            <BotIcon size={16} />
-                                        </div>
-                                        <div className="text-xs text-gray-500 animate-pulse mt-2">AI is generating response...</div>
-                                    </div>
-                                )}
-                                <div ref={messagesEndRef} />
-                            </div>
+<style>
+/* Hide OLD React floating AI button */
+button[aria-label="Open Chat"] {
+  display: none !important;
+}
 
-                            {/* Input Footer */}
-                            <div className="p-4 bg-gray-800 border-t border-gray-700">
-                                <div className="flex gap-2">
-                                    <input 
-                                        type="text"
-                                        value={input}
-                                        onChange={e => setInput(e.target.value)}
-                                        onKeyDown={e => e.key === 'Enter' && handleSend()}
-                                        placeholder="Ask about Arun's experience..."
-                                        className="flex-1 bg-gray-900 text-white border border-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                        disabled={isTyping}
-                                    />
-                                    <button 
-                                        onClick={handleSend}
-                                        disabled={isTyping || !input.trim()}
-                                        className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                    >
-                                        <SendIcon size={18} />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
+/* Hide OLD React chat modal container */
+.fixed.bottom-24.right-6,
+.fixed.bottom-6.right-6 {
+  display: none !important;
+}
+</style>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
 </body>
 </html>
