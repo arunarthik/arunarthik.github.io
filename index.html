@@ -71,30 +71,36 @@
   Admin
 </a>
     <div id="root"></div>
-    <!-- Explicitly link the entry point as a module -->
+    
+<!-- ===== UPDATED ADMIN AUTHENTICATION SCRIPT ===== -->
 <script>
-  const PASSWORD = "#Arun@1234"; // change this
+  // Set your required Admin credentials here
+  const ADMIN_USERNAME = "arun";
+  const ADMIN_PASSWORD = "#Arun@1234";
 
   const adminLink = document.getElementById("adminLink");
-
   adminLink.style.display = "block"; // always show button
 
   adminLink.addEventListener("click", function (e) {
-    const entered = localStorage.getItem("admin_auth");
+    const isAuth = localStorage.getItem("admin_authenticated");
 
-    if (entered === PASSWORD) {
-      return; // already authenticated → allow navigation
+    if (isAuth === "true") {
+      return; // already authenticated -> allow navigation to admin.html
     }
 
-    e.preventDefault(); // stop navigation
+    e.preventDefault(); // stop natural link navigation
 
-    const ask = prompt("Enter admin password:");
+    const enteredUsername = prompt("Enter admin username:");
+    if (enteredUsername === null) return; // user cancelled
 
-    if (ask === PASSWORD) {
-      localStorage.setItem("admin_auth", PASSWORD);
+    const enteredPassword = prompt("Enter admin password:");
+    if (enteredPassword === null) return; // user cancelled
+
+    if (enteredUsername === ADMIN_USERNAME && enteredPassword === ADMIN_PASSWORD) {
+      localStorage.setItem("admin_authenticated", "true");
       window.location.href = "/arun/admin.html";
     } else {
-      alert("Wrong password");
+      alert("Invalid username or password");
     }
   });
 </script>
@@ -153,7 +159,7 @@
       modal.style.display === "none" ? "block" : "none";
   });
 
-  // ⭐ Auto-open after 4 seconds (only once per session)
+  // Auto-open after 4 seconds (only once per session)
   const opened = sessionStorage.getItem("ai_auto_opened");
 
   if (!opened) {
