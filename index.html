@@ -131,94 +131,120 @@
     <!-- ========================================== -->
     <!--          ADMIN CONTROLLER SCRIPT           -->
     <!-- ========================================== -->
-    <script>
-        const USERNAME_KEY = "arun";
-        const PASSWORD_KEY = "#Arun@1234";
+    <!-- ========================================== -->
+<!--     ADMIN CONTROLLER & DYNAMIC OVERRIDES   -->
+<!-- ========================================== -->
+<script>
+    const USERNAME_KEY = "arun";
+    const PASSWORD_KEY = "#Arun@1234";
 
-        const adminBtn = document.getElementById("adminBtn");
-        const adminModal = document.getElementById("adminModal");
-        const authPanel = document.getElementById("authPanel");
-        const dashPanel = document.getElementById("dashPanel");
+    const adminBtn = document.getElementById("adminBtn");
+    const adminModal = document.getElementById("adminModal");
+    const authPanel = document.getElementById("authPanel");
+    const dashPanel = document.getElementById("dashPanel");
 
-        const closeAuthBtn = document.getElementById("closeAuthBtn");
-        const loginSubmitBtn = document.getElementById("loginSubmitBtn");
-        const logoutBtn = document.getElementById("logoutBtn");
-        const closeDashBtn = document.getElementById("closeDashBtn");
-        const saveDashBtn = document.getElementById("saveDashBtn");
+    const closeAuthBtn = document.getElementById("closeAuthBtn");
+    const loginSubmitBtn = document.getElementById("loginSubmitBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const closeDashBtn = document.getElementById("closeDashBtn");
+    const saveDashBtn = document.getElementById("saveDashBtn");
 
-        // Open Dashboard or Login Window
-        adminBtn.addEventListener("click", () => {
-            adminModal.style.display = "flex";
-            if (localStorage.getItem("admin_auth_state") === "true") {
-                openDashboard();
-            } else {
-                authPanel.classList.remove("hidden");
-                dashPanel.classList.add("hidden");
-            }
-        });
+    // 🌟 1. FORCE EXTRACT CHANGES TO VISIBLE INTERFACE
+    function applyDynamicChanges() {
+        const stored = localStorage.getItem("portfolio_data");
+        if (!stored) return;
+        
+        const data = JSON.parse(stored);
 
-        // Close functions
-        closeAuthBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
-        closeDashBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
+        // This forcefully searches the React app output and overrides the text on screen
+        setTimeout(() => {
+            // Fix Name and Title headers if changed
+            const headers = document.querySelectorAll("h1, p");
+            headers.forEach(el => {
+                if (el.textContent.includes("Terugu Arun")) el.textContent = data.name;
+                if (el.textContent.includes("Software Developer") && el.tagName === "P") el.textContent = data.title;
+            });
 
-        // Authenticate Login
-        loginSubmitBtn.addEventListener("click", () => {
-            const u = document.getElementById("auth_user").value;
-            const p = document.getElementById("auth_pass").value;
+            // Fix the Professional Summary paragraph dynamically
+            const paragraphs = document.querySelectorAll("p");
+            paragraphs.forEach(p => {
+                if (p.textContent.includes("Software Developer with 3+") || p.textContent.includes("years of experience")) {
+                    p.textContent = data.summary;
+                }
+            });
+        }, 500); // 500ms delay gives the React bundle time to render first
+    }
 
-            if (u === USERNAME_KEY && p === PASSWORD_KEY) {
-                localStorage.setItem("admin_auth_state", "true");
-                openDashboard();
-            } else {
-                alert("Invalid Admin Credentials");
-            }
-        });
+    // Run the override immediately when the window finishes loading
+    window.addEventListener("DOMContentLoaded", applyDynamicChanges);
 
-        // Populate and open fields form
-        function openDashboard() {
-            authPanel.classList.add("hidden");
-            dashPanel.classList.remove("hidden");
 
-            // Read existing data or pull from your default code settings
-            const currentData = JSON.parse(localStorage.getItem("portfolio_data")) || {
-                name: "Terugu Arun",
-                title: "Software Developer",
-                email: "arunkumarterugu@gmail.com",
-                phone: "6301503923",
-                summary: "Software Developer with 3+ years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines. Hands-on exposure to Generative AI concepts including LLM integration, Retrieval-Augmented Generation (RAG), and agent-based workflows."
-            };
-
-            document.getElementById("edit_name").value = currentData.name;
-            document.getElementById("edit_title").value = currentData.title;
-            document.getElementById("edit_email").value = currentData.email;
-            document.getElementById("edit_phone").value = currentData.phone;
-            document.getElementById("edit_summary").value = currentData.summary;
-        }
-
-        // Save Edits directly into Local Storage
-        saveDashBtn.addEventListener("click", () => {
-            const updated = {
-                name: document.getElementById("edit_name").value,
-                title: document.getElementById("edit_title").value,
-                email: document.getElementById("edit_email").value,
-                phone: document.getElementById("edit_phone").value,
-                summary: document.getElementById("edit_summary").value
-            };
-
-            localStorage.setItem("portfolio_data", JSON.stringify(updated));
-            alert("Changes saved directly inside your browser cache! Reloading page to apply updates...");
-            window.location.reload();
-        });
-
-        // Logout
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("admin_auth_state");
+    // --- Admin Dashboard Event Listeners ---
+    adminBtn.addEventListener("click", () => {
+        adminModal.style.display = "flex";
+        if (localStorage.getItem("admin_auth_state") === "true") {
+            openDashboard();
+        } else {
             authPanel.classList.remove("hidden");
             dashPanel.classList.add("hidden");
-            adminModal.style.display = "none";
-        });
-    </script>
+        }
+    });
 
+    closeAuthBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
+    closeDashBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
+
+    loginSubmitBtn.addEventListener("click", () => {
+        const u = document.getElementById("auth_user").value;
+        const p = document.getElementById("auth_pass").value;
+
+        if (u === USERNAME_KEY && p === PASSWORD_KEY) {
+            localStorage.setItem("admin_auth_state", "true");
+            openDashboard();
+        } else {
+            alert("Invalid Admin Credentials");
+        }
+    });
+
+    function openDashboard() {
+        authPanel.classList.add("hidden");
+        dashPanel.classList.remove("hidden");
+
+        const currentData = JSON.parse(localStorage.getItem("portfolio_data")) || {
+            name: "Terugu Arun",
+            title: "Software Developer",
+            email: "arunkumarterugu@gmail.com",
+            phone: "6301503923",
+            summary: "Software Developer with 4 years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines."
+        };
+
+        document.getElementById("edit_name").value = currentData.name;
+        document.getElementById("edit_title").value = currentData.title;
+        document.getElementById("edit_email").value = currentData.email;
+        document.getElementById("edit_phone").value = currentData.phone;
+        document.getElementById("edit_summary").value = currentData.summary;
+    }
+
+    saveDashBtn.addEventListener("click", () => {
+        const updated = {
+            name: document.getElementById("edit_name").value,
+            title: document.getElementById("edit_title").value,
+            email: document.getElementById("edit_email").value,
+            phone: document.getElementById("edit_phone").value,
+            summary: document.getElementById("edit_summary").value
+        };
+
+        localStorage.setItem("portfolio_data", JSON.stringify(updated));
+        alert("Changes saved! Updating interface configurations...");
+        window.location.reload();
+    });
+
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("admin_auth_state");
+        authPanel.classList.remove("hidden");
+        dashPanel.classList.add("hidden");
+        adminModal.style.display = "none";
+    });
+</script>
     <!-- ========================================== -->
     <!--               AI CHAT FLOATING WINDOW       -->
     <!-- ========================================== -->
