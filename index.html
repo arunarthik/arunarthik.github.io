@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terugu Arun | Portfolio</title>
+    <!-- Core Engine Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -31,322 +37,313 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="/index.css">
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-        "lucide-react": "https://esm.sh/lucide-react@0.463.0",
-        "@google/genai": "https://esm.sh/@google/genai@1.3.0",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-        "react/": "https://esm.sh/react@^19.2.3/"
-      }
-    }
-    </script>
-    <script type="module" crossorigin src="./assets/index-Y5NbW7gr.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans select-none">
 
-    <!-- Admin Trigger Button -->
-    <button
-      id="adminBtn"
-      style="
-        position: fixed;
-        top: 16px;
-        right: 20px;
-        background: #2563eb;
-        color: white;
-        padding: 8px 14px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 9999;
-      "
-    >
-      Admin Panel
-    </button>
-
-    <!-- Content Target -->
+    <!-- Mounting Point for App Interface -->
     <div id="root"></div>
 
     <!-- ========================================== -->
-    <!--          ADMIN DASHBOARD POPUP MODAL       -->
+    <!--          PORTFOLIO RERECONCILER BUNDLE      -->
     <!-- ========================================== -->
-    <div id="adminModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); items-center: center; justify-content: center; z-index: 10000; padding: 20px;" class="flex items-center justify-center">
-        <!-- Auth View -->
-        <div id="authPanel" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl hidden space-y-4">
-            <h3 class="text-xl font-bold text-blue-500 font-serif">Admin Authentication</h3>
-            <div>
-                <label class="block text-xs text-gray-400 mb-1">Username</label>
-                <input id="auth_user" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-            </div>
-            <div>
-                <label class="block text-xs text-gray-400 mb-1">Password</label>
-                <input id="auth_pass" type="password" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-            </div>
-            <div class="flex gap-2 justify-end pt-2">
-                <button id="closeAuthBtn" class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium text-white">Cancel</button>
-                <button id="loginSubmitBtn" class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-500">Login</button>
-            </div>
-        </div>
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
 
-        <!-- Dashboard Control View -->
-        <div id="dashPanel" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-2xl shadow-2xl hidden flex flex-col max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                <h3 class="text-xl font-bold text-blue-500 font-serif">Modify Profile Details</h3>
-                <button id="logoutBtn" class="text-xs bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded transition-all">Logout</button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Full Name</label>
-                    <input id="edit_name" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Professional Title</label>
-                    <input id="edit_title" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Email Address</label>
-                    <input id="edit_email" type="email" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Phone Number</label>
-                    <input id="edit_phone" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
-                </div>
-            </div>
-            <div>
-                <label class="block text-xs text-gray-400 mb-1">Professional Summary</label>
-                <textarea id="edit_summary" rows="4" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none"></textarea>
-            </div>
-            <div class="flex gap-2 justify-end pt-2 border-t border-gray-700">
-                <button id="closeDashBtn" class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium text-white">Close</button>
-                <button id="saveDashBtn" class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-500">Save Updates</button>
-            </div>
-        </div>
-    </div>
+        // Custom SVGs to support clean deployment without lucide-react loader packages
+        const CodeIcon = () => <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>;
+        const CpuIcon = () => <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>;
+        const CloudIcon = () => <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>;
+        const SettingsIcon = () => <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const BotIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>;
+        const CloseIcon = () => <svg width="20" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>;
 
-    <!-- ========================================== -->
-    <!--          ADMIN CONTROLLER SCRIPT           -->
-    <!-- ========================================== -->
-    <!-- ========================================== -->
-<!--     ADMIN CONTROLLER & DYNAMIC OVERRIDES   -->
-<!-- ========================================== -->
-<script>
-    const USERNAME_KEY = "arun";
-    const PASSWORD_KEY = "#Arun@1234";
+        const PortfolioApp = () => {
+            const [darkMode, setDarkMode] = useState(true);
+            const [isChatOpen, setIsChatOpen] = useState(false);
+            const [isAdminOpen, setIsAdminOpen] = useState(false);
+            const [isAdminAuthed, setIsAdminAuthed] = useState(false);
 
-    const adminBtn = document.getElementById("adminBtn");
-    const adminModal = document.getElementById("adminModal");
-    const authPanel = document.getElementById("authPanel");
-    const dashPanel = document.getElementById("dashPanel");
+            // Dashboard credentials
+            const [username, setUsername] = useState("");
+            const [password, setPassword] = useState("");
 
-    const closeAuthBtn = document.getElementById("closeAuthBtn");
-    const loginSubmitBtn = document.getElementById("loginSubmitBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const closeDashBtn = document.getElementById("closeDashBtn");
-    const saveDashBtn = document.getElementById("saveDashBtn");
-
-    // 🌟 1. CORRECTLY SELECT AND OVERRIDE COMPILED REACT TEXT
-    function applyDynamicChanges() {
-        const stored = localStorage.getItem("portfolio_data");
-        
-        // Define backup text elements to ensure it never displays an empty section
-        const defaultSummary = "Software Developer with 4 years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines. Hands-on exposure to Generative AI concepts including LLM integration, Retrieval-Augmented Generation (RAG), and agent-based workflows. Adept at delivering proof-of-concepts and production-ready solutions in fast-paced environments.";
-        const defaultName = "Terugu Arun";
-        const defaultTitle = "Software Developer";
-
-        const data = stored ? JSON.parse(stored) : {
-            name: defaultName,
-            title: defaultTitle,
-            summary: defaultSummary
-        };
-
-        // Fallback catch if the admin configuration saved empty fields
-        if (!data.summary || data.summary.trim() === "") {
-            data.summary = defaultSummary;
-        }
-
-        // Run continuous checks for 2 seconds to make sure React completes rendering first
-        let attempts = 0;
-        const interval = setInterval(() => {
-            attempts++;
-            
-            // A. Update Main Hero Headers (Name & Title)
-            const headers = document.querySelectorAll("h1, p");
-            headers.forEach(el => {
-                if (el.textContent.includes("Terugu Arun")) el.textContent = data.name;
-                if (el.textContent.includes("Software Developer") && el.tagName === "P") el.textContent = data.title;
+            // Synchronized Core Memory
+            const [profile, setProfile] = useState(() => {
+                const saved = localStorage.getItem("active_portfolio_data");
+                return saved ? JSON.parse(saved) : {
+                    name: "Terugu Arun",
+                    title: "Software Developer",
+                    email: "arunkumarterugu@gmail.com",
+                    phone: "6301503923",
+                    resumeUrl: "#",
+                    summary: "Software Developer with 4 years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines. Hands-on exposure to Generative AI concepts including LLM integration, Retrieval-Augmented Generation (RAG), and agent-based workflows."
+                };
             });
 
-            // B. Securely Navigate to the Nested Paragraph under "Professional Summary"
-            const headings = document.querySelectorAll("h3");
-            let summaryHeading = null;
-            
-            headings.forEach(h => {
-                if (h.textContent.trim() === "Professional Summary") {
-                    summaryHeading = h;
+            // Chat Assistant State
+            const [messages, setMessages] = useState([
+                { id: "w", role: "model", text: "Hello! I'm Arun's AI Assistant. How can I help you today?" }
+            ]);
+            const [chatInput, setChatInput] = useState("");
+            const [isTyping, setIsTyping] = useState(false);
+            const chatEndRef = useRef(null);
+
+            useEffect(() => {
+                if (darkMode) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+            }, [darkMode]);
+
+            useEffect(() => {
+                chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, [messages, isChatOpen]);
+
+            // Auto Open Chat Trigger (Only once per execution cycle)
+            useEffect(() => {
+                const opened = sessionStorage.getItem("chat_was_auto_opened");
+                if (!opened) {
+                    const timer = setTimeout(() => {
+                        setIsChatOpen(true);
+                        sessionStorage.setItem("chat_was_auto_opened", "true");
+                    }, 4000);
+                    return () => clearTimeout(timer);
                 }
-            });
+            }, []);
 
-            if (summaryHeading) {
-                // Next element is the white wrapper card div container
-                const cardContainer = summaryHeading.nextElementSibling;
-                if (cardContainer) {
-                    // Look explicitly for the nested paragraph inside the wrapper card
-                    const targetParagraph = cardContainer.querySelector("p");
-                    if (targetParagraph) {
-                        targetParagraph.textContent = data.summary;
-                        clearInterval(interval); // Success! Stop the interval timer loop.
+            // --- Authentication & Write Processing ---
+            const handleAdminLogin = () => {
+                if (username === "arun" && password === "#Arun@1234") {
+                    setIsAdminAuthed(true);
+                } else {
+                    alert("Incorrect admin login details.");
+                }
+            };
+
+            const commitAdminEdits = () => {
+                localStorage.setItem("active_portfolio_data", JSON.stringify(profile));
+                alert("Changes saved to layout successfully!");
+                setIsAdminOpen(false);
+            };
+
+            // --- Unified Context AI Chat Handler ---
+            const dispatchInquiry = () => {
+                if (!chatInput.trim() || isTyping) return;
+
+                const queryMsg = { id: Date.now().toString(), role: "user", text: chatInput };
+                setMessages(prev => [...prev, queryMsg]);
+                setChatInput("");
+                setIsTyping(true);
+
+                // Live dynamic scanning reads from state properties
+                setTimeout(() => {
+                    const normalized = queryMsg.text.toLowerCase();
+                    let reply = `Arun is an exceptional software engineer specializing in FastAPI and Python. Please let me know if you want specifics on his TCS experience!`;
+
+                    if (normalized.includes("experience") || normalized.includes("years") || normalized.includes("total")) {
+                        // Extract number from summary if typed dynamically
+                        const matches = profile.summary.match(/(\d+)\s+years/i);
+                        const experienceYears = matches ? matches[1] : "4";
+                        reply = `Arun has ${experienceYears} years of deep professional experience in backend architecture systems design.`;
+                    } else if (normalized.includes("skill") || normalized.includes("tech") || normalized.includes("stack")) {
+                        reply = `Arun's robust tech deck includes Python, FastAPI, Asynchronous software design (asyncio), Docker containers, Jenkins pipelines, and LangChain automation solutions.`;
+                    } else if (normalized.includes("summary") || normalized.includes("about")) {
+                        reply = profile.summary;
+                    } else if (normalized.includes("project") || normalized.includes("mask")) {
+                        reply = `One of Arun's key achievements is a Deep Learning-based Mask Detection System alongside automated prompt orchestration web pipelines.`;
+                    } else if (normalized.includes("contact") || normalized.includes("email") || normalized.includes("phone")) {
+                        reply = `You can reach Arun at ${profile.email} or call his mobile line at ${profile.phone}.`;
                     }
-                }
-            }
 
-            // Stop looking after 20 attempts to save browser memory leak
-            if (attempts > 20) {
-                clearInterval(interval);
-            }
-        }, 150); 
-    }
+                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: reply }]);
+                    setIsTyping(false);
+                }, 600);
+            };
 
-    // Bind initialization processes to DOM status events
-    window.addEventListener("DOMContentLoaded", applyDynamicChanges);
-    window.addEventListener("load", applyDynamicChanges);
+            return (
+                <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+                    {/* Navigation */}
+                    <nav class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-7xl mx-auto flex justify-between h-16 items-center">
+                            <span class="font-serif text-2xl font-bold tracking-tight">Arun<span class="text-blue-500">.dev</span></span>
+                            <div class="flex items-center space-x-3">
+                                <button onClick={() => setDarkMode(!darkMode)} class="p-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
+                                    {darkMode ? "☀️ Light" : "🌙 Dark"}
+                                </button>
+                                <button onClick={() => setIsAdminOpen(true)} class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition-all shadow-md">
+                                    Admin Panel
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
 
+                    {/* Hero Layout Area */}
+                    <header class="relative overflow-hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div class="flex-1 text-center md:text-left space-y-4">
+                                <span class="text-sm font-semibold text-blue-500 tracking-wide uppercase">Portfolio</span>
+                                <h1 class="text-4xl md:text-6xl font-serif font-bold tracking-tight">{profile.name}</h1>
+                                <p class="text-xl md:text-2xl text-gray-500 dark:text-gray-400 font-light">{profile.title}</p>
+                                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-gray-400">
+                                    <span>📍 Bangalore, India</span>
+                                </div>
+                                <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                                    <a href={`mailto:${profile.email}`} class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow-md transition-all">Email Me</a>
+                                    <a href={`tel:${profile.phone}`} class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 text-gray-800 dark:text-gray-200 px-5 py-2.5 rounded-lg text-sm font-medium transition-all">Call Me</a>
+                                    <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" class="border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 px-5 py-2.5 rounded-lg text-sm font-medium transition-all">Resume</a>
+                                </div>
+                            </div>
+                            <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-tr from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center border-4 border-white dark:border-gray-900 shadow-xl">
+                                <span class="text-4xl font-serif text-gray-400 font-bold">TA</span>
+                            </div>
+                        </div>
+                    </header>
 
-    // --- Admin Dashboard Event Listeners ---
-    adminBtn.addEventListener("click", () => {
-        adminModal.style.display = "flex";
-        if (localStorage.getItem("admin_auth_state") === "true") {
-            openDashboard();
-        } else {
-            authPanel.classList.remove("hidden");
-            dashPanel.classList.add("hidden");
-        }
-    });
+                    {/* Dashboard Columns Component View Matrix */}
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-12">
+                            <section class="space-y-4">
+                                <h3 class="text-2xl font-serif font-bold border-l-4 border-blue-500 pl-4">Professional Summary</h3>
+                                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                                    {profile.summary}
+                                </div>
+                            </section>
 
-    closeAuthBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
-    closeDashBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
+                            <section class="space-y-4">
+                                <h3 class="text-2xl font-serif font-bold border-l-4 border-blue-500 pl-4">Technical Arsenal</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-2">
+                                        <div class="flex items-center gap-2 text-blue-500 font-semibold"><CodeIcon /> Backend & Languages</div>
+                                        <div class="flex flex-wrap gap-1.5"><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Python</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">FastAPI</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Asyncio</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">PostgreSQL</span></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-2">
+                                        <div class="flex items-center gap-2 text-blue-500 font-semibold"><CpuIcon /> Artificial Intelligence</div>
+                                        <div class="flex flex-wrap gap-1.5"><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">LangChain</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">RAG Architectures</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">ChromaDB</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Agent Networks</span></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-2">
+                                        <div class="flex items-center gap-2 text-blue-500 font-semibold"><CloudIcon /> DevOps & Cloud</div>
+                                        <div class="flex flex-wrap gap-1.5"><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Docker</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Jenkins CI/CD</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">AWS EC2</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Git Toolkit</span></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-2">
+                                        <div class="flex items-center gap-2 text-blue-500 font-semibold"><SettingsIcon /> Testing & Support</div>
+                                        <div class="flex flex-wrap gap-1.5"><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Postman</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Pytest</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">ServiceNow</span><span class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">Swagger</span></div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
 
-    loginSubmitBtn.addEventListener("click", () => {
-        const u = document.getElementById("auth_user").value;
-        const p = document.getElementById("auth_pass").value;
+                        {/* Education Sidebar Panel */}
+                        <div class="space-y-6">
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-xl shadow-sm">
+                                <h4 class="font-bold text-lg mb-4 border-b border-gray-100 dark:border-gray-700 pb-2 text-blue-500">Education</h4>
+                                <div class="pl-3 border-l-2 border-blue-500">
+                                    <h5 class="font-semibold text-sm">B.Tech – Computer Science & Engineering</h5>
+                                    <p class="text-xs text-gray-400 mt-1">Kuppam Engineering College</p>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">Timeline: 2018-2022</p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
 
-        if (u === USERNAME_KEY && p === PASSWORD_KEY) {
-            localStorage.setItem("admin_auth_state", "true");
-            openDashboard();
-        } else {
-            alert("Invalid Admin Credentials");
-        }
-    });
+                    {/* ========================================== -->
+                    <!--     INTEGRATED DASHBOARD FRAMEWORK         -->
+                    <!-- ========================================== */}
+                    {isAdminOpen && (
+                        <div class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 animate-fade-in">
+                            {!isAdminAuthed ? (
+                                <div class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl space-y-4 text-white">
+                                    <h3 class="text-xl font-bold text-blue-500 font-serif">Admin Authentication</h3>
+                                    <div>
+                                        <label class="block text-xs text-gray-400 mb-1">Username</label>
+                                        <input type="text" value={username} onChange={e => setUsername(e.target.value)} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-400 mb-1">Password</label>
+                                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                    </div>
+                                    <div class="flex gap-2 justify-end pt-2">
+                                        <button onClick={() => setIsAdminOpen(false)} class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium">Cancel</button>
+                                        <button onClick={handleAdminLogin} class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium hover:bg-blue-500">Login</button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto space-y-4 text-white">
+                                    <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                                        <h3 class="text-xl font-bold text-blue-500 font-serif">Modify Profile Details</h3>
+                                        <button onClick={() => setIsAdminAuthed(false)} class="text-xs bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded transition-all">Logout</button>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                        <div>
+                                            <label class="block text-xs text-gray-400 mb-1">Full Name</label>
+                                            <input type="text" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-gray-400 mb-1">Professional Title</label>
+                                            <input type="text" value={profile.title} onChange={e => setProfile({...profile, title: e.target.value})} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-gray-400 mb-1">Email Address</label>
+                                            <input type="email" value={profile.email} onChange={e => setProfile({...profile, email: e.target.value})} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-gray-400 mb-1">Phone Number</label>
+                                            <input type="text" value={profile.phone} onChange={e => setProfile({...profile, phone: e.target.value})} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none text-white"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-400 mb-1">Hosted Resume Document Link URL</label>
+                                        <input type="text" value={profile.resumeUrl} onChange={e => setProfile({...profile, resumeUrl: e.target.value})} placeholder="Paste Drive, Dropbox or custom PDF asset link string here..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none text-white"/>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-400 mb-1">Professional Summary Description</label>
+                                        <textarea rows="4" value={profile.summary} onChange={e => setProfile({...profile, summary: e.target.value})} class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none text-white"></textarea>
+                                    </div>
+                                    <div class="flex gap-2 justify-end pt-2 border-t border-gray-700">
+                                        <button onClick={() => setIsAdminOpen(false)} class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium">Close</button>
+                                        <button onClick={commitAdminEdits} class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium hover:bg-blue-500">Save Updates</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
-    function openDashboard() {
-        authPanel.classList.add("hidden");
-        dashPanel.classList.remove("hidden");
+                    {/* ========================================== -->
+                    <!--              AI FLOATING WINDOW POPUP      -->
+                    <!-- ========================================== */}
+                    <button onClick={() => setIsChatOpen(!isChatOpen)} class="fixed bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all z-40 hover:scale-110 active:scale-95">
+                        <BotIcon size={24} />
+                    </button>
 
-        const currentData = JSON.parse(localStorage.getItem("portfolio_data")) || {
-            name: "Terugu Arun",
-            title: "Software Developer",
-            email: "arunkumarterugu@gmail.com",
-            phone: "6301503923",
-            summary: "Software Developer with 4 years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines."
+                    {isChatOpen && (
+                        <div class="fixed bottom-24 right-6 w-80 md:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col z-50 h-[480px]">
+                            <div class="p-4 bg-blue-600 text-white flex items-center justify-between">
+                                <h3 class="font-semibold flex items-center gap-2"><BotIcon size={20} /> AI Agent Assistant</h3>
+                                <button onClick={() => setIsChatOpen(false)} class="text-white hover:text-gray-200"><CloseIcon /></button>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900/50 text-gray-800 dark:text-gray-100">
+                                {messages.map(msg => (
+                                    <div key={msg.id} class={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                                        <div class={`w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0 font-bold ${msg.role === "user" ? "bg-indigo-100 text-indigo-600" : "bg-blue-100 text-blue-600"}`}>
+                                            {msg.role === "user" ? "U" : "AI"}
+                                        </div>
+                                        <div class={`max-w-[80%] rounded-xl px-3 py-2 text-xs shadow-sm ${msg.role === "user" ? "bg-blue-600 text-white rounded-br-none" : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-100 dark:border-gray-700"}`}>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                ))}
+                                {isTyping && <div class="text-[10px] text-gray-400 animate-pulse pl-9">AI Agent is mapping data query...</div>}
+                                <div ref={chatEndRef} />
+                            </div>
+                            <div class="p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex gap-2">
+                                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && dispatchInquiry()} placeholder="Ask about total experience or skills..." class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-transparent dark:border-gray-600 rounded-full px-4 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" disabled={isTyping}/>
+                                <button onClick={dispatchInquiry} disabled={isTyping || !chatInput.trim()} class="p-2 bg-blue-600 text-white rounded-full disabled:opacity-50"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
         };
 
-        document.getElementById("edit_name").value = currentData.name;
-        document.getElementById("edit_title").value = currentData.title;
-        document.getElementById("edit_email").value = currentData.email;
-        document.getElementById("edit_phone").value = currentData.phone;
-        document.getElementById("edit_summary").value = currentData.summary;
-    }
-
-    saveDashBtn.addEventListener("click", () => {
-        const updated = {
-            name: document.getElementById("edit_name").value,
-            title: document.getElementById("edit_title").value,
-            email: document.getElementById("edit_email").value,
-            phone: document.getElementById("edit_phone").value,
-            summary: document.getElementById("edit_summary").value
-        };
-
-        localStorage.setItem("portfolio_data", JSON.stringify(updated));
-        alert("Changes saved! Updating interface configurations...");
-        window.location.reload();
-    });
-
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("admin_auth_state");
-        authPanel.classList.remove("hidden");
-        dashPanel.classList.add("hidden");
-        adminModal.style.display = "none";
-    });
-</script>
-    <!-- ========================================== -->
-    <!--               AI CHAT FLOATING WINDOW       -->
-    <!-- ========================================== -->
-    <button
-      id="aiToggle"
-      style="
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #2563eb;
-        color: white;
-        border: none;
-        padding: 14px 18px;
-        border-radius: 50px;
-        cursor: pointer;
-        z-index: 9999;
-        font-weight: 600;
-      "
-    >
-      AI
-    </button>
-
-    <div
-      id="aiModal"
-      style="
-        display: none;
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 380px;
-        height: 520px;
-        background: #111827;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        z-index: 9999;
-      "
-    >
-      <iframe
-        src="/arun/"
-        style="width:100%; height:100%; border:none;"
-      ></iframe>
-    </div>
-
-    <script>
-      const btn = document.getElementById("aiToggle");
-      const modal = document.getElementById("aiModal");
-
-      btn.addEventListener("click", () => {
-        modal.style.display = modal.style.display === "none" ? "block" : "none";
-      });
-
-      const opened = sessionStorage.getItem("ai_auto_opened");
-      if (!opened) {
-        setTimeout(() => {
-          modal.style.display = "block";
-          sessionStorage.setItem("ai_auto_opened", "yes");
-        }, 4000);
-      }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PortfolioApp />);
     </script>
-
-    <style>
-    /* Prevent interference with compiled layout elements */
-    button[aria-label="Open Chat"] { display: none !important; }
-    .fixed.bottom-24.right-6, .fixed.bottom-6.right-6 { display: none !important; }
-    </style>
 </body>
 </html>
