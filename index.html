@@ -32,13 +32,16 @@
         }
     </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+<body class="bg-gray-900 text-white font-sans transition-colors duration-300">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useRef, useEffect } = React;
 
-        // Simple SVG Icons to replace the lucide library compilation dependency
+        // Paste your Gemini API Key directly inside these quotes
+        const GEMINI_API_KEY = "AIzaSyD_dXC1neChXjvSMCYEEMi0vBIa5ZYdp_A"; 
+
+        // SVG Icons
         const BotIcon = ({size=16}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>;
         const UserIcon = ({size=16}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
         const ChatIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>;
@@ -67,25 +70,38 @@
                 setIsTyping(true);
 
                 try {
-                    const response = await fetch('https://arun-ai-backend.vercel.app/api/chat', { 
+                    // Direct fetch request to the stable Google Gemini endpoint
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, { 
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: userMessage.text })
+                        body: JSON.stringify({
+                            contents: [{ 
+                                parts: [{ 
+                                    text: `You are a professional portfolio AI assistant for Terugu Arun. Arun is a Software Developer specializing in Python, FastAPI, and React. He has experience working at Tata Consultancy Services in clinical trial data systems. Highlight his skills if asked. Keep your answer brief and natural. User asks: ${userMessage.text}` 
+                                }] 
+                            }]
+                        })
                     });
 
                     const data = await response.json();
-                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: data.reply }]);
+                    
+                    if (data.error) {
+                        throw new Error(data.error.message);
+                    }
+
+                    const botReply = data.candidates[0].content.parts[0].text;
+                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: botReply }]);
                 } catch (error) {
-                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: "Backend Error: Please check your Vercel app deployment logs." }]);
+                    setMessages(prev => [...prev, { id: (Date.now()+1).toString(), role: "model", text: `API Error: ${error.message}. Double check your API key implementation.` }]);
                 } finally {
                     setIsTyping(false);
                 }
             };
 
             return (
-                <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+                <div className="min-h-screen flex flex-col items-center justify-center p-4">
                     <h1 className="text-4xl font-serif font-bold text-center text-primary-500 mb-2">Terugu Arun | AI Portfolio</h1>
-                    <p className="text-gray-400 mb-8">Click the floating message button in the bottom right corner to speak with the live agent.</p>
+                    <p className="text-gray-400 mb-8">Click the floating chat icon in the bottom right corner to test the direct Gemini integration.</p>
 
                     {/* Floating Toggle Button */}
                     <button 
@@ -97,7 +113,7 @@
 
                     {/* Chat Window Popup */}
                     {isChatOpen && (
-                        <div className="fixed bottom-24 right-6 w-80 md:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col z-50 h-[500px]">
+                        <div className="fixed bottom-24 right-6 w-80 md:w-96 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden flex flex-col z-50 h-[500px]">
                             {/* Header */}
                             <div className="p-4 bg-primary-600 text-white flex items-center justify-between">
                                 <h3 className="font-semibold flex items-center gap-2">
@@ -109,31 +125,31 @@
                                 </button>
                             </div>
 
-                            {/* Chat bubble body */}
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900/50 text-gray-800 dark:text-gray-200">
+                            {/* Chat body */}
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900/50 text-gray-200">
                                 {messages.map(msg => (
                                     <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "bg-indigo-100 text-indigo-600" : "bg-primary-100 text-primary-600"}`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "bg-indigo-900 text-indigo-300" : "bg-primary-900 text-primary-300"}`}>
                                             {msg.role === "user" ? <UserIcon size={16} /> : <BotIcon size={16} />}
                                         </div>
-                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.role === "user" ? "bg-primary-600 text-white rounded-br-none" : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-100 dark:border-gray-700"}`}>
+                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.role === "user" ? "bg-primary-600 text-white rounded-br-none" : "bg-gray-700 text-gray-100 rounded-bl-none border border-gray-600"}`}>
                                             {msg.text}
                                         </div>
                                     </div>
                                 ))}
                                 {isTyping && (
                                     <div className="flex gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center flex-shrink-0">
+                                        <div className="w-8 h-8 rounded-full bg-primary-900 text-primary-300 flex items-center justify-center flex-shrink-0">
                                             <BotIcon size={16} />
                                         </div>
-                                        <div className="text-xs text-gray-500 animate-pulse mt-2">AI Agent is thinking...</div>
+                                        <div className="text-xs text-gray-500 animate-pulse mt-2">AI is generating response...</div>
                                     </div>
                                 )}
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            {/* Message Entry Input */}
-                            <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                            {/* Input Footer */}
+                            <div className="p-4 bg-gray-800 border-t border-gray-700">
                                 <div className="flex gap-2">
                                     <input 
                                         type="text"
@@ -141,7 +157,7 @@
                                         onChange={e => setInput(e.target.value)}
                                         onKeyDown={e => e.key === 'Enter' && handleSend()}
                                         placeholder="Ask about Arun's experience..."
-                                        className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="flex-1 bg-gray-900 text-white border border-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         disabled={isTyping}
                                     />
                                     <button 
