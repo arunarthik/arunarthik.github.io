@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-     
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terugu Arun | Portfolio</title>
@@ -32,156 +31,259 @@
         }
       }
     </script>
-
-  <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/index.css">
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.463.0",
-    "@google/genai": "https://esm.sh/@google/genai@1.3.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-  <script type="module" crossorigin src="./assets/index-Y5NbW7gr.js"></script>
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom": "https://esm.sh/react-dom@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.463.0",
+        "@google/genai": "https://esm.sh/@google/genai@1.3.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="./assets/index-Y5NbW7gr.js"></script>
 </head>
-  <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
-         <!-- Admin Button (top-right) -->
-<a
-  href="/arun/admin.html"
-  id="adminLink"
-  style="
-    position: fixed;
-    top: 16px;
-    right: 20px;
-    background: #2563eb;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-decoration: none;
-    display: none;
-    z-index: 9999;
-  "
->
-  Admin
-</a>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Admin Trigger Button -->
+    <button
+      id="adminBtn"
+      style="
+        position: fixed;
+        top: 16px;
+        right: 20px;
+        background: #2563eb;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 9999;
+      "
+    >
+      Admin Panel
+    </button>
+
+    <!-- Content Target -->
     <div id="root"></div>
-    
-<!-- ===== UPDATED ADMIN AUTHENTICATION SCRIPT ===== -->
-<script>
-  // Set your required Admin credentials here
-  const ADMIN_USERNAME = "arun";
-  const ADMIN_PASSWORD = "#Arun@1234";
 
-  const adminLink = document.getElementById("adminLink");
-  adminLink.style.display = "block"; // always show button
+    <!-- ========================================== -->
+    <!--          ADMIN DASHBOARD POPUP MODAL       -->
+    <!-- ========================================== -->
+    <div id="adminModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); items-center: center; justify-content: center; z-index: 10000; padding: 20px;" class="flex items-center justify-center">
+        <!-- Auth View -->
+        <div id="authPanel" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl hidden space-y-4">
+            <h3 class="text-xl font-bold text-blue-500 font-serif">Admin Authentication</h3>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1">Username</label>
+                <input id="auth_user" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1">Password</label>
+                <input id="auth_pass" type="password" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+            </div>
+            <div class="flex gap-2 justify-end pt-2">
+                <button id="closeAuthBtn" class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium text-white">Cancel</button>
+                <button id="loginSubmitBtn" class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-500">Login</button>
+            </div>
+        </div>
 
-  adminLink.addEventListener("click", function (e) {
-    const isAuth = localStorage.getItem("admin_authenticated");
+        <!-- Dashboard Control View -->
+        <div id="dashPanel" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl w-full max-w-2xl shadow-2xl hidden flex flex-col max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                <h3 class="text-xl font-bold text-blue-500 font-serif">Modify Profile Details</h3>
+                <button id="logoutBtn" class="text-xs bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded transition-all">Logout</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Full Name</label>
+                    <input id="edit_name" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Professional Title</label>
+                    <input id="edit_title" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Email Address</label>
+                    <input id="edit_email" type="email" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Phone Number</label>
+                    <input id="edit_phone" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs text-gray-400 mb-1">Professional Summary</label>
+                <textarea id="edit_summary" rows="4" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none"></textarea>
+            </div>
+            <div class="flex gap-2 justify-end pt-2 border-t border-gray-700">
+                <button id="closeDashBtn" class="px-4 py-2 bg-gray-700 rounded-lg text-sm font-medium text-white">Close</button>
+                <button id="saveDashBtn" class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-500">Save Updates</button>
+            </div>
+        </div>
+    </div>
 
-    if (isAuth === "true") {
-      return; // already authenticated -> allow navigation to admin.html
-    }
+    <!-- ========================================== -->
+    <!--          ADMIN CONTROLLER SCRIPT           -->
+    <!-- ========================================== -->
+    <script>
+        const USERNAME_KEY = "arun";
+        const PASSWORD_KEY = "#Arun@1234";
 
-    e.preventDefault(); // stop natural link navigation
+        const adminBtn = document.getElementById("adminBtn");
+        const adminModal = document.getElementById("adminModal");
+        const authPanel = document.getElementById("authPanel");
+        const dashPanel = document.getElementById("dashPanel");
 
-    const enteredUsername = prompt("Enter admin username:");
-    if (enteredUsername === null) return; // user cancelled
+        const closeAuthBtn = document.getElementById("closeAuthBtn");
+        const loginSubmitBtn = document.getElementById("loginSubmitBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const closeDashBtn = document.getElementById("closeDashBtn");
+        const saveDashBtn = document.getElementById("saveDashBtn");
 
-    const enteredPassword = prompt("Enter admin password:");
-    if (enteredPassword === null) return; // user cancelled
+        // Open Dashboard or Login Window
+        adminBtn.addEventListener("click", () => {
+            adminModal.style.display = "flex";
+            if (localStorage.getItem("admin_auth_state") === "true") {
+                openDashboard();
+            } else {
+                authPanel.classList.remove("hidden");
+                dashPanel.classList.add("hidden");
+            }
+        });
 
-    if (enteredUsername === ADMIN_USERNAME && enteredPassword === ADMIN_PASSWORD) {
-      localStorage.setItem("admin_authenticated", "true");
-      window.location.href = "/arun/admin.html";
-    } else {
-      alert("Invalid username or password");
-    }
-  });
-</script>
+        // Close functions
+        closeAuthBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
+        closeDashBtn.addEventListener("click", () => { adminModal.style.display = "none"; });
 
-<!-- ===== AI FLOATING BUTTON ===== -->
-<button
-  id="aiToggle"
-  style="
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 14px 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    z-index: 9999;
-    font-weight: 600;
-  "
->
-  AI
-</button>
+        // Authenticate Login
+        loginSubmitBtn.addEventListener("click", () => {
+            const u = document.getElementById("auth_user").value;
+            const p = document.getElementById("auth_pass").value;
 
-<!-- ===== AI CHAT MODAL ===== -->
-<div
-  id="aiModal"
-  style="
-    display: none;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 380px;
-    height: 520px;
-    background: #111827;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    z-index: 9999;
-  "
->
-  <iframe
-    src="/arun/"
-    style="width:100%; height:100%; border:none;"
-  ></iframe>
-</div>
+            if (u === USERNAME_KEY && p === PASSWORD_KEY) {
+                localStorage.setItem("admin_auth_state", "true");
+                openDashboard();
+            } else {
+                alert("Invalid Admin Credentials");
+            }
+        });
 
-<!-- ===== TOGGLE SCRIPT (MUST BE LAST) ===== -->
-<script>
-  const btn = document.getElementById("aiToggle");
-  const modal = document.getElementById("aiModal");
+        // Populate and open fields form
+        function openDashboard() {
+            authPanel.classList.add("hidden");
+            dashPanel.classList.remove("hidden");
 
-  // Manual toggle on button click
-  btn.addEventListener("click", () => {
-    modal.style.display =
-      modal.style.display === "none" ? "block" : "none";
-  });
+            // Read existing data or pull from your default code settings
+            const currentData = JSON.parse(localStorage.getItem("portfolio_data")) || {
+                name: "Terugu Arun",
+                title: "Software Developer",
+                email: "arunkumarterugu@gmail.com",
+                phone: "6301503923",
+                summary: "Software Developer with 3+ years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines. Hands-on exposure to Generative AI concepts including LLM integration, Retrieval-Augmented Generation (RAG), and agent-based workflows."
+            };
 
-  // Auto-open after 4 seconds (only once per session)
-  const opened = sessionStorage.getItem("ai_auto_opened");
+            document.getElementById("edit_name").value = currentData.name;
+            document.getElementById("edit_title").value = currentData.title;
+            document.getElementById("edit_email").value = currentData.email;
+            document.getElementById("edit_phone").value = currentData.phone;
+            document.getElementById("edit_summary").value = currentData.summary;
+        }
 
-  if (!opened) {
-    setTimeout(() => {
-      modal.style.display = "block";
-      sessionStorage.setItem("ai_auto_opened", "yes");
-    }, 4000);
-  }
-</script>
+        // Save Edits directly into Local Storage
+        saveDashBtn.addEventListener("click", () => {
+            const updated = {
+                name: document.getElementById("edit_name").value,
+                title: document.getElementById("edit_title").value,
+                email: document.getElementById("edit_email").value,
+                phone: document.getElementById("edit_phone").value,
+                summary: document.getElementById("edit_summary").value
+            };
 
-<style>
-/* Hide OLD React floating AI button */
-button[aria-label="Open Chat"] {
-  display: none !important;
-}
+            localStorage.setItem("portfolio_data", JSON.stringify(updated));
+            alert("Changes saved directly inside your browser cache! Reloading page to apply updates...");
+            window.location.reload();
+        });
 
-/* Hide OLD React chat modal container */
-.fixed.bottom-24.right-6,
-.fixed.bottom-6.right-6 {
-  display: none !important;
-}
-</style>
+        // Logout
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("admin_auth_state");
+            authPanel.classList.remove("hidden");
+            dashPanel.classList.add("hidden");
+            adminModal.style.display = "none";
+        });
+    </script>
 
+    <!-- ========================================== -->
+    <!--               AI CHAT FLOATING WINDOW       -->
+    <!-- ========================================== -->
+    <button
+      id="aiToggle"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 14px 18px;
+        border-radius: 50px;
+        cursor: pointer;
+        z-index: 9999;
+        font-weight: 600;
+      "
+    >
+      AI
+    </button>
+
+    <div
+      id="aiModal"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 380px;
+        height: 520px;
+        background: #111827;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        z-index: 9999;
+      "
+    >
+      <iframe
+        src="/arun/"
+        style="width:100%; height:100%; border:none;"
+      ></iframe>
+    </div>
+
+    <script>
+      const btn = document.getElementById("aiToggle");
+      const modal = document.getElementById("aiModal");
+
+      btn.addEventListener("click", () => {
+        modal.style.display = modal.style.display === "none" ? "block" : "none";
+      });
+
+      const opened = sessionStorage.getItem("ai_auto_opened");
+      if (!opened) {
+        setTimeout(() => {
+          modal.style.display = "block";
+          sessionStorage.setItem("ai_auto_opened", "yes");
+        }, 4000);
+      }
+    </script>
+
+    <style>
+    /* Prevent interference with compiled layout elements */
+    button[aria-label="Open Chat"] { display: none !important; }
+    .fixed.bottom-24.right-6, .fixed.bottom-6.right-6 { display: none !important; }
+    </style>
 </body>
 </html>
