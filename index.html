@@ -149,34 +149,71 @@
     const closeDashBtn = document.getElementById("closeDashBtn");
     const saveDashBtn = document.getElementById("saveDashBtn");
 
-    // 🌟 1. FORCE EXTRACT CHANGES TO VISIBLE INTERFACE
+    // 🌟 1. CORRECTLY SELECT AND OVERRIDE COMPILED REACT TEXT
     function applyDynamicChanges() {
         const stored = localStorage.getItem("portfolio_data");
-        if (!stored) return;
         
-        const data = JSON.parse(stored);
+        // Define backup text elements to ensure it never displays an empty section
+        const defaultSummary = "Software Developer with 4 years of experience in building scalable backend applications using Python, FastAPI. Skilled in API development, asynchronous programming, SQL optimization, and CI/CD pipelines. Hands-on exposure to Generative AI concepts including LLM integration, Retrieval-Augmented Generation (RAG), and agent-based workflows. Adept at delivering proof-of-concepts and production-ready solutions in fast-paced environments.";
+        const defaultName = "Terugu Arun";
+        const defaultTitle = "Software Developer";
 
-        // This forcefully searches the React app output and overrides the text on screen
-        setTimeout(() => {
-            // Fix Name and Title headers if changed
+        const data = stored ? JSON.parse(stored) : {
+            name: defaultName,
+            title: defaultTitle,
+            summary: defaultSummary
+        };
+
+        // Fallback catch if the admin configuration saved empty fields
+        if (!data.summary || data.summary.trim() === "") {
+            data.summary = defaultSummary;
+        }
+
+        // Run continuous checks for 2 seconds to make sure React completes rendering first
+        let attempts = 0;
+        const interval = setInterval(() => {
+            attempts++;
+            
+            // A. Update Main Hero Headers (Name & Title)
             const headers = document.querySelectorAll("h1, p");
             headers.forEach(el => {
                 if (el.textContent.includes("Terugu Arun")) el.textContent = data.name;
                 if (el.textContent.includes("Software Developer") && el.tagName === "P") el.textContent = data.title;
             });
 
-            // Fix the Professional Summary paragraph dynamically
-            const paragraphs = document.querySelectorAll("p");
-            paragraphs.forEach(p => {
-                if (p.textContent.includes("Software Developer with 3+") || p.textContent.includes("years of experience")) {
-                    p.textContent = data.summary;
+            // B. Securely Navigate to the Nested Paragraph under "Professional Summary"
+            const headings = document.querySelectorAll("h3");
+            let summaryHeading = null;
+            
+            headings.forEach(h => {
+                if (h.textContent.trim() === "Professional Summary") {
+                    summaryHeading = h;
                 }
             });
-        }, 500); // 500ms delay gives the React bundle time to render first
+
+            if (summaryHeading) {
+                // Next element is the white wrapper card div container
+                const cardContainer = summaryHeading.nextElementSibling;
+                if (cardContainer) {
+                    // Look explicitly for the nested paragraph inside the wrapper card
+                    const targetParagraph = cardContainer.querySelector("p");
+                    if (targetParagraph) {
+                        targetParagraph.textContent = data.summary;
+                        clearInterval(interval); // Success! Stop the interval timer loop.
+                    }
+                }
+            }
+
+            // Stop looking after 20 attempts to save browser memory leak
+            if (attempts > 20) {
+                clearInterval(interval);
+            }
+        }, 150); 
     }
 
-    // Run the override immediately when the window finishes loading
+    // Bind initialization processes to DOM status events
     window.addEventListener("DOMContentLoaded", applyDynamicChanges);
+    window.addEventListener("load", applyDynamicChanges);
 
 
     // --- Admin Dashboard Event Listeners ---
